@@ -1148,9 +1148,13 @@ class _RefResolver:
                     part = int(part)
                 except ValueError:
                     pass
-            if part not in document.keys():
-                # try changing string to tuple to handle 
-                part = eval(part)                  
+            if isinstance(document, dict):        
+                if part not in document.keys():
+                    # try changing string to tuple to handle
+                    try: 
+                        part = eval(part)   
+                    except ValueError:
+                        pass                                       
             try:
                 document = document[part]
             except (TypeError, LookupError):
