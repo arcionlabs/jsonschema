@@ -14,6 +14,7 @@ import contextlib
 import json
 import reprlib
 import warnings
+import ast
 
 from attrs import define, field, fields
 from jsonschema_specifications import REGISTRY as SPECIFICATIONS
@@ -1149,12 +1150,12 @@ class _RefResolver:
                 except ValueError:
                     pass
             if isinstance(document, dict):        
-                if part not in document.keys():
-                    # try changing string to tuple to handle
+                if (part not in document.keys()) and part.startswith("(") and part.endswith(")"):
+                    # change text of tuple to tuple
                     try: 
-                        part = eval(part)   
-                    except ValueError:
-                        pass                                       
+                        part = ast.literal_eval(part)   
+                    except :
+                        pass                                      
             try:
                 document = document[part]
             except (TypeError, LookupError):
